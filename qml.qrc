@@ -2,6 +2,12 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>images/sicad-mobile-drawer.png</file>
+        <file>RegistrarAula.qml</file>
+        <file>AvaliacaoInstitucional.qml</file>
+        <file>Configuracoes.qml</file>
+        <file>LancarNotas.qml</file>
+        <file>MensagemParaATurma.qml</file>
+        <file>RealizarChamada.qml</file>
+        <file>VisualizarTurma.qml</file>
     </qresource>
 </RCC>
-

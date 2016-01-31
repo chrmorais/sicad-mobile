@@ -1,5 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Controls 1.4
+
 import Material 0.2
 import Material.ListItems 0.1 as ListItem
 
@@ -14,6 +15,18 @@ ApplicationWindow {
         accentColor: Palette.colors["green"]["900"]
         tabHighlightColor: Palette.colors["green"]["900"]
     }
+
+    property var sections: [
+        { name: "Registrar Aula", source: "RegistrarAula.qml", icon: "awesome/calendar_check_o" },
+        { name: "Realizar Chamada", source: "RealizarChamada.qml", icon: "awesome/bullhorn" },
+        { name: "Lançar Notas", source: "LancarNotas.qml", icon: "social/school" },
+        { name: "Visualizar Turma", source: "VisualizarTurma.qml", icon: "awesome/eye" },
+        { name: "Avaliação Institucional", source: "AvaliacaoInstitucional.qml", icon: "action/done" },
+        { name: "Mensagem para a Turma", source: "MensagemParaATurma.qml", icon: "awesome/comment" },
+        { name: "Configurações", source: "Configuracoes.qml", icon: "action/settings" }
+    ]
+
+    property var selectedSection
 
     initialPage: page
 
@@ -36,6 +49,8 @@ ApplicationWindow {
         NavigationDrawer {
             id: navDrawer
             enabled: true
+            width: Units.dp(280)
+
             Flickable {
                 anchors.fill: parent
                 contentHeight: Math.max(content.implicitHeight, height)
@@ -47,49 +62,19 @@ ApplicationWindow {
                         fillMode: Image.PreserveAspectFit
                         source: "qrc:/images/sicad-mobile-drawer.png"
                     }
-//                    ListItem.Subheader {
-//                        text: "Header 1"
-//                    }
-//                    ListItem.Subtitled {
-//                        text: "Title"
-//                        subText: "Subtitle"
-//                        iconName: "action/input"
-//                    }
-                    ListItem.Standard {
-                        text: "Registro de Aula"
-                        iconName: "awesome/calendar_check_o"
+                    Repeater {
+                        model: sections
+                        ListItem.Standard {
+                            text: modelData.name
+                            iconName: modelData.icon
+                            selected: (selectedSection !== undefined) ? (selectedSection.name === text):false
+                            onClicked: {
+                                //selectedSection = modelData
+                                pageStack.push(Qt.resolvedUrl(modelData.source))
+                                navDrawer.close()
+                            }
+                        }
                     }
-                    ListItem.Standard {
-                        text: "Chamada"
-                        iconName: "awesome/bullhorn"
-                    }
-                    ListItem.Standard {
-                        text: "Notas"
-                        iconName: "social/school"
-                    }
-                    ListItem.Standard {
-                        text: "Turmas"
-                        iconName: "awesome/eye"
-                    }
-                    ListItem.Divider {}
-                    ListItem.Standard {
-                        text: "Avaliação"
-                        iconName: "action/done"
-                    }
-                    ListItem.Divider {}
-                    ListItem.Standard {
-                        text: "Mensagem"
-                        iconName: "awesome/comment"
-                    }
-                    ListItem.Divider {}
-                    ListItem.Standard {
-                        text: "Configurações"
-                        iconName: "action/settings"
-                    }
-//                    ListItem.SimpleMenu {
-//                        text: "Menu"
-//                        model: ["Option 1", "Option 2", "Option 3"]
-//                    }
                 }
             }
         }
@@ -140,69 +125,27 @@ ApplicationWindow {
         }
         Item {
             anchors.fill: parent
-//            Column {
-//                anchors.centerIn: parent
-//                spacing: Units.dp(20)
 
-//                Button {
-//                    text: "Simple Button"
-//                    anchors.horizontalCenter: parent.horizontalCenter
-//                    onClicked: snackbar.open("Simple, isn't it?")
-//                }
-
-//                Button {
-//                    text: "Raised Button"
-//                    elevation: 1
-//                    anchors.horizontalCenter: parent.horizontalCenter
-//                    onClicked: snackbar.open("This is a snackbar")
-//                }
-
-//                Button {
-//                    text: "Disabled Raised Button"
-//                    elevation: 1
-//                    enabled: false
-//                    anchors.horizontalCenter: parent.horizontalCenter
-//                }
-
-//                Button {
-//                    text: "Wide Button"
-
-//                    width: Units.dp(200)
-//                    elevation: 1
-//                    anchors.horizontalCenter: parent.horizontalCenter
-
-//                    onClicked: snackbar.open("That button is wide, and so is this snackbar!")
-//                }
-
-//                Button {
-//                    id: focusableButton
-//                    text: "Focusable with really long text"
-//                    elevation: 1
-//                    activeFocusOnPress: true
-//                    anchors.horizontalCenter: parent.horizontalCenter
-
-//                    onClicked: snackbar.open("The text is really very very very very very long and now it needs to wrap, so this should show as two lines!")
-//                }
-
-//                Button {
-//                    text: "Colored button"
-//                    textColor: Theme.accentColor
-//                    anchors.horizontalCenter: parent.horizontalCenter
-
-//                    onClicked: snackbar.open("That button is colored!")
-//                }
-
-//                Button {
-//                    text: "Focusable button #2"
-//                    elevation: 1
-//                    activeFocusOnPress: true
-//                    backgroundColor: Theme.primaryColor
-//                    anchors.horizontalCenter: parent.horizontalCenter
-
-//                    onClicked: snackbar.open("That button is colored!")
-//                }
-//            }
-
+            Flickable {
+                id: flickable
+                anchors.fill: parent
+                clip: true
+                contentHeight: Math.max(example.implicitHeight + 40, height)
+                Loader {
+                    id: example
+                    anchors.fill: parent
+                    asynchronous: true
+                    visible: status == Loader.Ready
+                    source: (selectedSection !== undefined) ? Qt.resolvedUrl(selectedSection.source):""
+                }
+                ProgressCircle {
+                    anchors.centerIn: parent
+                    visible: example.status == Loader.Loading
+                }
+            }
+            Scrollbar {
+                flickableItem: flickable
+            }
             ActionButton {
                 anchors {
                     right: parent.right
@@ -218,7 +161,6 @@ ApplicationWindow {
                 }
                 iconName: "content/add"
             }
-
             Snackbar {
                 id: snackbar
             }
