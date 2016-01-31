@@ -31,7 +31,9 @@ ApplicationWindow {
     initialPage: page
 
     Page {
-        title: "SICAD Mobile"
+//        title: "SICAD Mobile"
+        title: fromdb
+
         id: page
 
         actions: [
@@ -49,7 +51,7 @@ ApplicationWindow {
         NavigationDrawer {
             id: navDrawer
             enabled: true
-            width: Units.dp(280)
+            width: Units.dp(275)
 
             Flickable {
                 anchors.fill: parent
