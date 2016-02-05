@@ -13,7 +13,7 @@ void createConnection(QQmlApplicationEngine &engine)
 {
     QFile dfile("./sicad-mobile.db");
     if (!dfile.exists()) {
-        QFile odfile("assets:/sicad-mobile.db.template");
+        QFile odfile(":/sicad-mobile.db.template");
         if (odfile.exists())
         {
              odfile.copy("./sicad-mobile.db");

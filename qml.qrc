@@ -9,5 +9,6 @@
         <file>MensagemParaATurma.qml</file>
         <file>RealizarChamada.qml</file>
         <file>VisualizarTurma.qml</file>
+        <file>sicad-mobile.db.template</file>
     </qresource>
 </RCC>
